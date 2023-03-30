@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "1042238971295",
+    "firebase_url": "https://nester-fee8e-default-rtdb.firebaseio.com",
+    "project_id": "nester-fee8e",
+    "storage_bucket": "nester-fee8e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1042238971295:android:9bfc54b172f3411e42b1aa",
+        "android_client_info": {
+          "package_name": "com.example.nester"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1042238971295-88urlf5h74tsfksn3g0ie3k4nmkbqnnb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5lF8SikTUXJIKxyckmW-PfNhxCPjBGWA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1042238971295-88urlf5h74tsfksn3g0ie3k4nmkbqnnb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1042238971295:android:72706365764b2a6342b1aa",
+        "android_client_info": {
+          "package_name": "com.example.nesteradmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1042238971295-88urlf5h74tsfksn3g0ie3k4nmkbqnnb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5lF8SikTUXJIKxyckmW-PfNhxCPjBGWA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1042238971295-88urlf5h74tsfksn3g0ie3k4nmkbqnnb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
