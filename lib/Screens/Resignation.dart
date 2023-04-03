@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:nesteradmin/Provider/EmployService.dart';
+import 'package:nesteradmin/Provider/ResignationProvider.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ResignationPage extends StatefulWidget {
   @override
@@ -6,34 +10,59 @@ class ResignationPage extends StatefulWidget {
 }
 
 class _ResignationPageState extends State<ResignationPage> {
-  List<Map<String, dynamic>> resignations = [
-    {'name': 'Alice', 'reason': 'Moving to a new city', 'approved': false},
-    {'name': 'Bob', 'reason': 'Starting a new job', 'approved': false},
-    {'name': 'Charlie', 'reason': 'Family emergency', 'approved': false},
-  ];
-
-  void _approveResignation(int index) {
-    setState(() {
-      resignations[index]['approved'] = true;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ResignationProvider>(context, listen: false).fetchResigns();
     });
+  }
+
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((MapEntry<String, String> e) =>
+            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .join('&');
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      child: ListView.builder(
-        itemCount: resignations.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            leading: const Icon(Icons.person),
-            title: Text(resignations[index]['name']),
-            subtitle: Text(resignations[index]['reason']),
-            trailing: IconButton(
-              icon: const Icon(Icons.check),
-              onPressed: resignations[index]['approved']
-                  ? null
-                  : () {
+    var resignations = Provider.of<ResignationProvider>(context).resignation;
+    var employess = Provider.of<EmployProvider>(context).employees;
+    sendresignationemail(String email) async {
+      final Uri emailLaunchUri = Uri(
+        scheme: 'mailto',
+        path: email,
+        query: encodeQueryParameters(<String, String>{
+          'subject': 'Resignation Request',
+        }),
+      );
+      await launchUrl
+      (emailLaunchUri, );
+    }
+
+    return resignations.isEmpty
+        ? Center(
+            child: Column(
+              children: const [Text('No Resignation Requests')],
+            ),
+          )
+        : Container(
+            padding: const EdgeInsets.all(10),
+            child: ListView.builder(
+              itemCount: resignations.length,
+              itemBuilder: (BuildContext context, int index) {
+                var employ = employess
+                    .where(
+                        (element) => element.id == resignations[index].userid)
+                    .first;
+                return ListTile(
+                  leading: const Icon(Icons.person),
+                  title: Text(employ.name),
+                  subtitle: Text(resignations[index].reason),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.check),
+                    onPressed: () {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -50,9 +79,9 @@ class _ResignationPageState extends State<ResignationPage> {
                               ),
                               TextButton(
                                 child: const Text('Approve'),
-                                onPressed: () {
-                                  _approveResignation(index);
+                                onPressed: () async {
                                   Navigator.pop(context);
+                                  await sendresignationemail(employ.email);
                                 },
                               ),
                             ],
@@ -60,10 +89,10 @@ class _ResignationPageState extends State<ResignationPage> {
                         },
                       );
                     },
+                  ),
+                );
+              },
             ),
           );
-        },
-      ),
-    );
   }
 }

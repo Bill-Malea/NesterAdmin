@@ -1,6 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:nesteradmin/Provider/AttendanceProvider.dart';
 import 'package:nesteradmin/Provider/EmployService.dart';
+import 'package:nesteradmin/Provider/GrievancesProvider.dart';
+import 'package:nesteradmin/Provider/LeaveProvider.dart';
+import 'package:nesteradmin/Provider/ResignationProvider.dart';
 import 'package:provider/provider.dart';
 
 import 'NavBar.dart';
@@ -25,6 +29,18 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => EmployProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AttendanceProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => LeaveProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => GrievanceProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ResignationProvider(),
         ),
       ],
       child: const MyApp()));

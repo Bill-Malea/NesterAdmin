@@ -17,21 +17,17 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
   @override
   void initState() {
     super.initState();
-    _fetchEmployees();
-  }
-
-  List<Employee> employees = [];
-  void _fetchEmployees() async {
-    final employeeslist =
-        await Provider.of<EmployProvider>(context, listen: false)
-            .fetchEmployees();
-    setState(() {
-      employees = employeeslist;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<EmployProvider>(context,listen:
+      false).fetchEmployees();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    var employees = Provider.of<EmployProvider>(
+      context,
+    ).employees;
     return SingleChildScrollView(
       child: employees.isEmpty
           ? const Center(
@@ -56,7 +52,20 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const AddEmployPage()),
+                              builder: (context) => AddEmployPage(
+                                    employee: Employee(
+                                      dbid: '',
+                                      department: '',
+                                      gender: '',
+                                      id: '',
+                                      name: '',
+                                      email: '',
+                                      phone: '',
+                                      role: '',
+                                      salary: '',
+                                      joineDate: '',
+                                    ),
+                                  )),
                         );
                       },
                       child: Row(
@@ -98,17 +107,18 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
                             itemBuilder: (BuildContext context) =>
                                 <PopupMenuEntry>[
                               const PopupMenuItem(
-                                value: 'delete',
-                                child: Text('Delete'),
-                              ),
-                              const PopupMenuItem(
                                 value: 'modify',
                                 child: Text('Modify'),
                               ),
                             ],
                             onSelected: (value) {
-                              if (value == 'delete') {
-                              } else if (value == 'modify') {}
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddEmployPage(
+                                          employee: employee,
+                                        )),
+                              );
                             },
                           ),
                         ),

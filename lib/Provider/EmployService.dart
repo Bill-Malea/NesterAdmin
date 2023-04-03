@@ -54,6 +54,7 @@ class EmployProvider extends ChangeNotifier {
 
   Future<List<Employee>> fetchEmployees() async {
     final response = await http.get(Uri.parse('$_baseUrl/Employees.json'));
+
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body) as Map<String, dynamic>;
       List<Employee> fetchedemp = [];
@@ -72,10 +73,11 @@ class EmployProvider extends ChangeNotifier {
             salary: val['salary'] ?? '',
           ));
         });
+        _employess = fetchedemp;
+        notifyListeners();
       });
-      _employess = fetchedemp;
-      notifyListeners();
-      return fetchedemp;
+
+      return _employess;
     } else {
       throw Exception('Failed to load employees');
     }
@@ -128,21 +130,103 @@ class EmployProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> updateEmployee(Employee employee) async {
-    final response = await http.put(
-      Uri.parse('$_baseUrl/Employees/${employee.id}.json'),
-      body: json.encode(employtoJson(employee)),
+  Future<Employee?> updateEmployee(dynamic employee,
+      {required String dbid,
+      required String id,
+      required BuildContext context}) async {
+    final response = await http.patch(
+      Uri.parse('$_baseUrl/Employees/$id/$dbid.json'),
+      body: json.encode(employee),
     );
-    if (response.statusCode != 200) {
-      throw Exception('Failed to update employee');
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as Map<String, dynamic>;
+      await fetchEmployees();
+      // ignore: use_build_context_synchronously
+      showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return SizedBox(
+            height: 300,
+            child: AlertDialog(
+              title: const Text('Success'),
+              content: Column(
+                children: [
+                  const Icon(
+                    Icons.check_circle_outline_outlined,
+                    color: Colors.greenAccent,
+                    size: 50,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text('User ${jsonData['name']} Updated Successfully  '),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  child: const Text('Close'),
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      );
+      return Employee.fromJson(jsonData);
+    } else {
+      throw Exception('Failed to create employee');
     }
   }
 
-  Future<void> deleteEmployee(String id) async {
-    final response =
-        await http.delete(Uri.parse('$_baseUrl/Employees/$id.json'));
-    if (response.statusCode != 200) {
-      throw Exception('Failed to delete employee');
+  Future<Employee?> deleteEmployee(
+      dynamic employee, String id, BuildContext context) async {
+    final response = await http.delete(
+      Uri.parse('$_baseUrl/Employees/$id/.json'),
+    );
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as Map<String, dynamic>;
+      // ignore: use_build_context_synchronously
+      showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return SizedBox(
+            height: 300,
+            child: AlertDialog(
+              title: const Text('Success'),
+              content: SizedBox(
+                height: 200,
+                child: Column(
+                  children: const [
+                    Icon(
+                      Icons.check_circle_outline_outlined,
+                      color: Colors.greenAccent,
+                      size: 50,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text('User  Deleted Successfully  '),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  child: const Text('Close'),
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      );
+      return Employee.fromJson(jsonData);
+    } else {
+      throw Exception('Failed to create employee');
     }
   }
 }
