@@ -181,8 +181,10 @@ class EmployProvider extends ChangeNotifier {
     }
   }
 
-  Future<Employee?> deleteEmployee(
-      dynamic employee, String id, BuildContext context) async {
+  Future<bool> deleteEmployee(
+    String id,
+    BuildContext context,
+  ) async {
     final response = await http.delete(
       Uri.parse('$_baseUrl/Employees/$id/.json'),
     );
@@ -224,7 +226,60 @@ class EmployProvider extends ChangeNotifier {
           );
         },
       );
-      return Employee.fromJson(jsonData);
+      return response.statusCode ==200;
+    } else {
+      throw Exception('Failed to create employee');
+    }
+  }
+  
+
+  Future<bool> archiveEmployee(
+      dynamic employee, BuildContext context, String id) async {
+    final response = await http.post(
+      Uri.parse('$_baseUrl/Archive.json'),
+      body: json.encode(employee),
+    );
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as Map<String, dynamic>;
+      // ignore: use_build_context_synchronously
+      await deleteEmployee(
+        id,
+        context,
+      );
+      // ignore: use_build_context_synchronously
+      showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return SizedBox(
+            height: 300,
+            child: AlertDialog(
+              title: const Text('Success'),
+              content: Column(
+                children: [
+                  const Icon(
+                    Icons.check_circle_outline_outlined,
+                    color: Colors.greenAccent,
+                    size: 50,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text('User ${jsonData['name']} Created Successfully  '),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  child: const Text('Close'),
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      );
+      return response.statusCode==200 ? true:false;
     } else {
       throw Exception('Failed to create employee');
     }

@@ -29,7 +29,7 @@ class _ResignationPageState extends State<ResignationPage> {
   Widget build(BuildContext context) {
     var resignations = Provider.of<ResignationProvider>(context).resignation;
     var employess = Provider.of<EmployProvider>(context).employees;
-    sendresignationemail(String email) async {
+    sendresignationemail(String email, dynamic employee, employeid) async {
       final Uri emailLaunchUri = Uri(
         scheme: 'mailto',
         path: email,
@@ -37,8 +37,44 @@ class _ResignationPageState extends State<ResignationPage> {
           'subject': 'Resignation Request',
         }),
       );
-      await launchUrl
-      (emailLaunchUri, );
+      var succesded = await Provider.of<EmployProvider>(context, listen: false)
+          .archiveEmployee(employee, context, employeid)
+          .then((value) {
+        if (value) {
+          Provider.of<EmployProvider>(context, listen: false)
+              .deleteEmployee(employeid, context)
+              .then((value) {
+            if (value) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text('Successfully Deleted.'),
+                    backgroundColor: Colors.green),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Failed to Delete Files.'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to Archive  Files.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      });
+
+      // ignore: use_build_context_synchronously
+      await Provider.of<ResignationProvider>(context)
+          .deletresign(employeid, context);
+      bool didlauch = await launchUrl(
+        emailLaunchUri,
+      );
     }
 
     return resignations.isEmpty
@@ -56,6 +92,17 @@ class _ResignationPageState extends State<ResignationPage> {
                     .where(
                         (element) => element.id == resignations[index].userid)
                     .first;
+                var employjson = {
+                  'role': employ.role,
+                  'id': employ.id,
+                  'name': employ.name,
+                  'email': employ.email,
+                  'phone': employ.phone,
+                  'department': employ.department,
+                  'gender': employ.gender,
+                  'joineDate': employ.joineDate,
+                  'salary': employ.salary,
+                };
                 return ListTile(
                   leading: const Icon(Icons.person),
                   title: Text(employ.name),
@@ -81,7 +128,8 @@ class _ResignationPageState extends State<ResignationPage> {
                                 child: const Text('Approve'),
                                 onPressed: () async {
                                   Navigator.pop(context);
-                                  await sendresignationemail(employ.email);
+                                  await sendresignationemail(
+                                      employ.email, employjson, employ.id);
                                 },
                               ),
                             ],
