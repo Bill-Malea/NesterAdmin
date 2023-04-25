@@ -5,6 +5,9 @@ import 'package:nesteradmin/Models/GrievanceModel.dart';
 import 'package:http/http.dart' as http;
 
 class GrievanceProvider extends ChangeNotifier {
+  List<Grievance> _grievances = [];
+
+  List<Grievance> get grievances => [..._grievances];
   Future<List<Grievance>> fetchGrieves() async {
     final response = await http.get(Uri.parse(
         'https://nester-fee8e-default-rtdb.firebaseio.com/Grievances.json'));
@@ -29,6 +32,9 @@ class GrievanceProvider extends ChangeNotifier {
                 description: griev['description'],
               ),
             );
+
+            _grievances = grievance;
+            notifyListeners();
           }
         });
       });

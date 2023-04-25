@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:nesteradmin/Screens/Report.dart';
+import 'package:nesteradmin/Screens/Reports/EmployeReport.dart';
 import 'Screens/AttendancePage.dart';
 import 'Screens/EmployesList.dart';
 import 'Screens/Grievances.dart';
 import 'Screens/Leaves.dart';
+import 'Screens/QrScreen.dart';
 import 'Screens/Resignation.dart';
 
 class Navigation extends StatefulWidget {
@@ -21,6 +24,8 @@ class _NavigationState extends State<Navigation> {
     const LeavesPage(),
     GrievancesPage(),
     ResignationPage(),
+    const QRScreen(),
+    const PDFSave(title: 'REPORTS'),
 
     // Add additional pages as necessary
   ];
@@ -40,6 +45,10 @@ class _NavigationState extends State<Navigation> {
       return 'Grievances';
     } else if (_selectedIndex == 4) {
       return 'Resignation List';
+    } else if (_selectedIndex == 5) {
+      return 'Attendance Qr';
+    } else if (_selectedIndex == 6) {
+      return 'Reports';
     }
     return 'Employee Management Interface';
   }
@@ -88,6 +97,18 @@ class _NavigationState extends State<Navigation> {
               Icons.close,
             ),
             label: 'Resignation',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.qr_code,
+            ),
+            label: 'Qr Code',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.analytics,
+            ),
+            label: 'Report',
           ),
           // Add additional items as necessary
         ],

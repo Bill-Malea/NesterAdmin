@@ -8,6 +8,7 @@ class NavProvider extends ChangeNotifier {
     false,
     false,
     false,
+    false,
   ];
 
   int get selectetab => _select;
@@ -17,7 +18,7 @@ class NavProvider extends ChangeNotifier {
   int _select = 0;
 
   void select(int n) {
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 6; i++) {
       if (i != n) {
         _selectedtab[i] = false;
         _select = n;
