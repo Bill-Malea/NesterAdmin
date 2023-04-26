@@ -23,15 +23,17 @@ class AttendanceProvider extends ChangeNotifier {
         int numEntries = 0;
 
         val.forEach((attid, att) {
-          var checkin = DateTime.parse(att['checkin']);
-          var checkout = DateTime.parse(att['checkout']);
+          if (att['checkout'] != null) {
+            var checkin = DateTime.parse(att['checkin']);
+            var checkout = DateTime.parse(att['checkout']);
 
-          int diffInMinutes = checkout.difference(checkin).inHours;
-          totalTime += diffInMinutes;
+            int diffInMinutes = checkout.difference(checkin).inHours;
+            totalTime += diffInMinutes;
 
-          numEntries++;
+            numEntries++;
 
-          rawatt.add(Attendance(checkin: checkin, checkout: checkout));
+            rawatt.add(Attendance(checkin: checkin, checkout: checkout));
+          }
         });
 
         var averageTime = totalTime / numEntries;
