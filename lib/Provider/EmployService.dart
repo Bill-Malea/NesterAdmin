@@ -188,6 +188,10 @@ class EmployProvider extends ChangeNotifier {
     final response = await http.delete(
       Uri.parse('$_baseUrl/Employees/$id/.json'),
     );
+
+    await fetchEmployees();
+    print(response.body);
+    print(response.statusCode);
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body) as Map<String, dynamic>;
       // ignore: use_build_context_synchronously
@@ -226,12 +230,11 @@ class EmployProvider extends ChangeNotifier {
           );
         },
       );
-      return response.statusCode ==200;
+      return response.statusCode == 200;
     } else {
-      throw Exception('Failed to create employee');
+      throw Exception('Failed to Delete employee');
     }
   }
-  
 
   Future<bool> archiveEmployee(
       dynamic employee, BuildContext context, String id) async {
@@ -279,7 +282,7 @@ class EmployProvider extends ChangeNotifier {
           );
         },
       );
-      return response.statusCode==200 ? true:false;
+      return response.statusCode == 200 ? true : false;
     } else {
       throw Exception('Failed to create employee');
     }

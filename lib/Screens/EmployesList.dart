@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nesteradmin/Provider/EmployService.dart';
+import 'package:nesteradmin/Provider/LeaveProvider.dart';
 import 'package:provider/provider.dart';
 
 import '../Models/EmployeeModel.dart';
@@ -18,8 +19,8 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<EmployProvider>(context,listen:
-      false).fetchEmployees();
+      Provider.of<EmployProvider>(context, listen: false).fetchEmployees();
+      Provider.of<LeaveProvider>(context, listen: false).fetchLeaves();
     });
   }
 
@@ -110,15 +111,26 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
                                 value: 'modify',
                                 child: Text('Modify'),
                               ),
+                              const PopupMenuItem(
+                                value: 'delete',
+                                child: Text('Delete'),
+                              ),
                             ],
                             onSelected: (value) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AddEmployPage(
-                                          employee: employee,
-                                        )),
-                              );
+                              if (value.toString().toLowerCase() == 'modify') {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AddEmployPage(
+                                            employee: employee,
+                                          )),
+                                );
+                              } else if (value.toString().toLowerCase() ==
+                                  'delete') {
+                                Provider.of<EmployProvider>(context,
+                                        listen: false)
+                                    .deleteEmployee(employee.id, context);
+                              }
                             },
                           ),
                         ),

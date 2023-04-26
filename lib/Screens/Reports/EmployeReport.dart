@@ -36,17 +36,16 @@ class _EmployeeReportsState extends State<EmployeeReports> {
     pdf = pw.Document();
     reportTitle = 'Employee Report';
     headers = [
-      'ID',
       'Name',
       'Phone'
           'Email',
       'Deparment',
       'Role',
+      'Job',
       'Salary',
     ];
     data = widget.employees
         .map((e) => [
-              e.id.toString(),
               e.name,
               e.phone,
               e.email,

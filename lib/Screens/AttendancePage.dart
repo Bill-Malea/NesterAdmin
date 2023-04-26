@@ -29,28 +29,16 @@ class _AttendancePerformancePageState extends State<AttendancePerformancePage> {
     var employees = Provider.of<EmployProvider>(context).employees;
     var attendance = Provider.of<AttendanceProvider>(context).attendance;
 
-    String conclusion(double hours) {
+    Color getColorForHours(double hours) {
       if (hours >= 8) {
-        return 'Execellent';
-      } else if (hours >= 7 && hours < 8) {
-        return 'Good';
-      } else if (hours >= 7 && hours < 8) {
-        return 'Average';
-      }
-
-      return 'Below Average';
-    }
-
-    Color progressColor(double hours) {
-      if (hours >= 8) {
-        return Colors.green;
-      } else if (hours >= 7 && hours < 8) {
         return Colors.greenAccent;
-      } else if (hours >= 7 && hours < 8) {
+      } else if (hours >= 7) {
         return const Color.fromARGB(255, 207, 165, 12);
+      } else if (hours < 6) {
+        return Colors.red;
+      } else {
+        return Colors.green;
       }
-
-      return Colors.red;
     }
 
     return Scaffold(
@@ -69,30 +57,30 @@ class _AttendancePerformancePageState extends State<AttendancePerformancePage> {
                   DataColumn(label: Text('Role')),
                   DataColumn(label: Text('Average Hours')),
                   DataColumn(label: Text('Percentage')),
-                  DataColumn(label: Text('Conclusion')),
                 ],
                 rows: attendance.map((att) {
-                  var emp = employees.firstWhere((e) => e.id == att.userid);
+                  Employee? emp = employees.isNotEmpty
+                      ? employees.firstWhere((e) => e.id == att.userid)
+                      : null;
 
                   var average = (double.parse(att.averagetime) / 8);
+
+                  var col = getColorForHours(average * 100);
                   return DataRow(cells: [
-                    DataCell(Text(emp.name)),
+                    DataCell(Text(emp!.name)),
                     DataCell(Text(emp.department)),
                     DataCell(Text(emp.role)),
                     DataCell(Text(att.averagetime)),
                     DataCell(CircularPercentIndicator(
                       radius: 30.0,
                       lineWidth: 7.0,
-                      percent: average,
+                      percent: average > 1.0 ? 1.0 : average,
                       center: Text(
                         '${(average * 100).toStringAsFixed(2)}%',
                         style: const TextStyle(fontSize: 10),
                       ),
-                      progressColor: progressColor(average),
+                      progressColor: col,
                     )),
-                    DataCell(
-                      Text(conclusion(average)),
-                    ),
                   ]);
                 }).toList(),
               ),

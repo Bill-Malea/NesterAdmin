@@ -13,6 +13,7 @@ class GrievanceProvider extends ChangeNotifier {
         'https://nester-fee8e-default-rtdb.firebaseio.com/Grievances.json'));
     var rawdata = jsonDecode(response.body);
     List<Grievance> grievance = [];
+    List<Grievance> allgrievance = [];
     if (response.statusCode == 200 && rawdata != null) {
       var data = rawdata as Map<String, dynamic>;
       data.forEach((key, value) {
@@ -32,10 +33,22 @@ class GrievanceProvider extends ChangeNotifier {
                 description: griev['description'],
               ),
             );
-
-            _grievances = grievance;
-            notifyListeners();
           }
+
+          allgrievance.add(
+            Grievance(
+              id: id,
+              dateTime: griev['datetime'],
+              department: griev['description'],
+              reply: griev['reply'],
+              title: griev['title'],
+              userid: key,
+              username: '',
+              description: griev['description'],
+            ),
+          );
+          _grievances = allgrievance;
+          notifyListeners();
         });
       });
 

@@ -14,37 +14,57 @@ import 'dart:io';
 import 'package:pdf/widgets.dart' as pw;
 import 'dart:typed_data';
 import 'dart:html' as html;
+import '../../Models/AttendanceModel.dart';
 import '../../Models/EmployeeModel.dart';
 
-class GrievanceReports extends StatefulWidget {
-  final List<Grievance> grievances;
-  const GrievanceReports({Key? key, required this.grievances})
+class AttendanceReports extends StatefulWidget {
+  final List<UserAttendance> userattendance;
+  final List<Employee> employees;
+  const AttendanceReports(
+      {Key? key, required this.employees, required this.userattendance})
       : super(key: key);
 
   @override
-  _GrievanceReportsState createState() => _GrievanceReportsState();
+  _AttendanceReportsState createState() => _AttendanceReportsState();
 }
 
-class _GrievanceReportsState extends State<GrievanceReports> {
+class _AttendanceReportsState extends State<AttendanceReports> {
   late final pw.Document pdf;
   late final String reportTitle;
   late final List<String> headers;
   late final List<List<String>> data;
+  String conclusion(double hours) {
+    if (hours >= 8) {
+      return 'Execellent';
+    } else if (hours >= 7 && hours < 8) {
+      return 'Good';
+    } else if (hours >= 7 && hours < 8) {
+      return 'Average';
+    }
+
+    return 'Below Average';
+  }
+
+  String username(String uid) {
+    var user = widget.employees.firstWhere(
+        (element) => element.id.toLowerCase() == uid.toString().toLowerCase());
+
+    return user.name;
+  }
 
   @override
   void initState() {
     super.initState();
     pdf = pw.Document();
-    reportTitle = 'Grievances Report';
-    headers = [
-      'Title',
-      'Deparment',
-      'Employee',
-      'Response',
-    ];
-    data = widget.grievances
-        .map((e) =>
-            [e.title, e.department, e.userid, e.reply ?? 'Not Responded'])
+    reportTitle = 'Attendance Report';
+    headers = ['Employee Name', 'User Id', 'AverageTime(hrs)', 'Remark'];
+    data = widget.userattendance
+        .map((e) => [
+              username(e.userid),
+              e.userid,
+              e.averagetime,
+              conclusion(double.parse(e.averagetime))
+            ])
         .toList();
     createPDF();
   }

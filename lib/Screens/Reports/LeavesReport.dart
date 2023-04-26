@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:intl/intl.dart';
 import 'package:nesteradmin/Models/GrievanceModel.dart';
+import 'package:nesteradmin/Models/leaveModel.dart';
 import 'package:nesteradmin/Provider/EmployService.dart';
 import 'package:nesteradmin/Provider/GrievancesProvider.dart';
 import 'package:nesteradmin/Screens/Report.dart';
@@ -16,35 +18,58 @@ import 'dart:typed_data';
 import 'dart:html' as html;
 import '../../Models/EmployeeModel.dart';
 
-class GrievanceReports extends StatefulWidget {
-  final List<Grievance> grievances;
-  const GrievanceReports({Key? key, required this.grievances})
-      : super(key: key);
+class LeavesReports extends StatefulWidget {
+  final List<Leave> leaves;
+  const LeavesReports({Key? key, required this.leaves}) : super(key: key);
 
   @override
-  _GrievanceReportsState createState() => _GrievanceReportsState();
+  _LeavesReportsState createState() => _LeavesReportsState();
 }
 
-class _GrievanceReportsState extends State<GrievanceReports> {
+class _LeavesReportsState extends State<LeavesReports> {
   late final pw.Document pdf;
   late final String reportTitle;
   late final List<String> headers;
   late final List<List<String>> data;
+  String leavestatus(bool? status) {
+    if (status == null) {
+      return 'Pending';
+    } else if (status == true) {
+      return 'Approved';
+    }
+    return 'Denied';
+  }
+
+  String datemain(String dateString) {
+    // Parse the string to a DateTime object
+    DateTime dateTime = DateTime.parse(dateString);
+
+    // Format the DateTime object to a readable date string
+    String readableDate = DateFormat('MMMM dd, yyyy').format(dateTime);
+
+    return readableDate; // Output: March 31, 2023
+  }
 
   @override
   void initState() {
     super.initState();
     pdf = pw.Document();
-    reportTitle = 'Grievances Report';
+    reportTitle = 'Leaves Report';
     headers = [
-      'Title',
-      'Deparment',
-      'Employee',
-      'Response',
+      'Name',
+      'Leave Reason',
+      'Start',
+      'End',
+      'Status',
     ];
-    data = widget.grievances
-        .map((e) =>
-            [e.title, e.department, e.userid, e.reply ?? 'Not Responded'])
+    data = widget.leaves
+        .map((e) => [
+              e.name,
+              e.reason,
+              datemain(e.from),
+              datemain(e.to),
+              leavestatus(e.status),
+            ])
         .toList();
     createPDF();
   }

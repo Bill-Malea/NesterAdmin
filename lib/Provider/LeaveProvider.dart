@@ -6,6 +6,8 @@ import '../Models/leaveModel.dart';
 import 'package:http/http.dart' as http;
 
 class LeaveProvider extends ChangeNotifier {
+  List<Leave> _leaves = [];
+  List<Leave> get leaves => [..._leaves];
   Future<List<Leave>> fetchLeaves() async {
     final response = await http.get(Uri.parse(
         'https://nester-fee8e-default-rtdb.firebaseio.com/Leave.json'));
@@ -28,7 +30,8 @@ class LeaveProvider extends ChangeNotifier {
           ));
         });
       });
-
+      _leaves = leaves;
+      notifyListeners();
       return leaves;
     } else {
       throw Exception('Failed to fetch leaves');
