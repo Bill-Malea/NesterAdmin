@@ -4,12 +4,14 @@ import 'package:http/http.dart' as http;
 import 'package:nesteradmin/Models/AttendanceModel.dart';
 
 class AttendanceProvider extends ChangeNotifier {
-  final apiUrl = 'https://nester-fee8e-default-rtdb.firebaseio.com';
+  final apiUrl =
+      'https://employee-management-syst-29f9f-default-rtdb.firebaseio.com';
   List<UserAttendance> _attendance = [];
   List<UserAttendance> get attendance => _attendance;
 
   Future<List<UserAttendance>?> fetchAttendance() async {
     final response = await http.get(Uri.parse('$apiUrl/Attendance.json'));
+
     var dataraw = jsonDecode(response.body);
     if (response.statusCode == 200) {
       var data = dataraw as Map<String, dynamic>;
@@ -25,6 +27,7 @@ class AttendanceProvider extends ChangeNotifier {
         val.forEach((attid, att) {
           if (att['checkout'] != null) {
             var checkin = DateTime.parse(att['checkin']);
+
             var checkout = DateTime.parse(att['checkout']);
 
             int diffInMinutes = checkout.difference(checkin).inHours;

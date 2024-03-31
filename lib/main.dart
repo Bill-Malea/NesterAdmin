@@ -6,7 +6,6 @@ import 'package:nesteradmin/Provider/GrievancesProvider.dart';
 import 'package:nesteradmin/Provider/LeaveProvider.dart';
 import 'package:nesteradmin/Provider/ResignationProvider.dart';
 import 'package:provider/provider.dart';
-
 import 'NavBar.dart';
 import 'Provider/NavigationProvider.dart';
 
@@ -15,10 +14,10 @@ void main() async {
 
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-      apiKey: "AIzaSyC5lF8SikTUXJIKxyckmW-PfNhxCPjBGWA",
-      appId: "nester-fee8e",
+      apiKey: "AIzaSyBkeALt7zNfaV2EzcXebRffCuL6dL9ENvw",
+      appId: "employee-management-syst-29f9f",
       messagingSenderId: "XXX",
-      projectId: "nester-fee8e",
+      projectId: "employee-management-syst-29f9f",
     ),
   );
   runApp(MultiProvider(
@@ -57,9 +56,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           colorScheme: ColorScheme.fromSwatch()
-              .copyWith(background: Colors.white)
+              .copyWith(background: Colors.black)
               .copyWith(secondary: const Color(0xFF3a424d))
-              .copyWith(primary: const Color(0xFF58bee6))),
+              .copyWith(primary: const Color.fromARGB(255, 88, 230, 112))),
       home: const Navigation(),
     );
   }
@@ -75,7 +74,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('NESTER ADMIN'),
+        title: const Text('EMPLOYEE ATTENDANCE MANAGEMENT SYSTEM'),
         centerTitle: true,
       ),
       body: const Center(

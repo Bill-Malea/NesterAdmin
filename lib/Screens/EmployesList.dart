@@ -15,11 +15,20 @@ class EmployeeListPage extends StatefulWidget {
 }
 
 class _EmployeeListPageState extends State<EmployeeListPage> {
+  var isloading = false;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<EmployProvider>(context, listen: false).fetchEmployees();
+      isloading = true;
+      Provider.of<EmployProvider>(context, listen: false)
+          .fetchEmployees()
+          .then((value) {
+        setState(() {
+          isloading = false;
+        });
+      });
       Provider.of<LeaveProvider>(context, listen: false).fetchLeaves();
     });
   }
@@ -30,7 +39,7 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
       context,
     ).employees;
     return SingleChildScrollView(
-      child: employees.isEmpty
+      child: isloading
           ? const Center(
               child: CircularProgressIndicator(
                 strokeWidth: 1,
@@ -69,13 +78,16 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
                                   )),
                         );
                       },
-                      child: Row(
-                        children: const [
+                      child: const Row(
+                        children: [
                           Icon(Icons.person_add_alt_rounded),
                           SizedBox(
                             width: 5,
                           ),
-                          Text('Add Employee'),
+                          Text(
+                            'Add Employee',
+                            style: TextStyle(color: Colors.red),
+                          ),
                         ],
                       ),
                     ),

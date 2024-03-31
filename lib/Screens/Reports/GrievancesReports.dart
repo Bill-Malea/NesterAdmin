@@ -1,20 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:nesteradmin/Models/GrievanceModel.dart';
-import 'package:nesteradmin/Provider/EmployService.dart';
-import 'package:nesteradmin/Provider/GrievancesProvider.dart';
-import 'package:nesteradmin/Screens/Report.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart';
-import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:share_extend/share_extend.dart';
-import 'dart:io';
-import 'package:pdf/widgets.dart' as pw;
-import 'dart:typed_data';
 import 'dart:html' as html;
-import '../../Models/EmployeeModel.dart';
 
 class GrievanceReports extends StatefulWidget {
   final List<Grievance> grievances;

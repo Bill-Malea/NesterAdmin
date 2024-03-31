@@ -55,8 +55,8 @@ class _AddEmployPageState extends State<AddEmployPage> {
                   height: 300,
                   child: AlertDialog(
                     title: const Text('Failed To Create User'),
-                    content: Column(
-                      children: const [
+                    content: const Column(
+                      children: [
                         Icon(
                           Icons.dangerous,
                           color: Colors.red,
@@ -121,8 +121,8 @@ class _AddEmployPageState extends State<AddEmployPage> {
               height: 300,
               child: AlertDialog(
                 title: const Text('Failed To Create User'),
-                content: Column(
-                  children: const [
+                content: const Column(
+                  children: [
                     Icon(
                       Icons.dangerous,
                       color: Colors.red,
@@ -163,8 +163,8 @@ class _AddEmployPageState extends State<AddEmployPage> {
                         strokeWidth: 1,
                       ),
                     if (addingData)
-                      Row(
-                        children: const [
+                      const Row(
+                        children: [
                           CircularProgressIndicator(
                             strokeWidth: 1,
                           ),
@@ -203,7 +203,9 @@ class _AddEmployPageState extends State<AddEmployPage> {
                                     height: 40,
                                     child: ElevatedButton(
                                       onPressed: creatingEmployee,
-                                      child: const Text('Save'),
+                                      child: const Text(
+                                        'Save',
+                                      ),
                                     ),
                                   )
                                 : SizedBox(

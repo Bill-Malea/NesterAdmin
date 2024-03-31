@@ -8,7 +8,8 @@ import '../Models/EmployeeModel.dart';
 
 class EmployProvider extends ChangeNotifier {
   final _auth = FirebaseAuth.instance;
-  final _baseUrl = 'https://nester-fee8e-default-rtdb.firebaseio.com';
+  final _baseUrl =
+      'https://employee-management-syst-29f9f-default-rtdb.firebaseio.com';
 
   List<Employee> _employess = [];
 
@@ -32,8 +33,8 @@ class EmployProvider extends ChangeNotifier {
     UserCredential userCredential;
     try {
       userCredential = await _auth.createUserWithEmailAndPassword(
-          email: email.trim(), password: '1234567890');
-
+          email: email, password: '1234567890');
+      print("=====================${userCredential.user!.email}========");
       return userCredential.user;
     } on PlatformException catch (err) {
       var message = "An error occured please check your credentails";
@@ -48,6 +49,8 @@ class EmployProvider extends ChangeNotifier {
       ));
     } catch (err) {
       // ignore: avoid_print
+
+      print("=====================${err}========");
     }
     return null;
   }
@@ -56,7 +59,16 @@ class EmployProvider extends ChangeNotifier {
     final response = await http.get(Uri.parse('$_baseUrl/Employees.json'));
 
     if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body) as Map<String, dynamic>;
+      final responsedata = json.decode(response.body);
+
+      if (responsedata == null) {
+        return _employess;
+      }
+
+      final jsonData = responsedata;
+
+      print("-------${responsedata}-");
+
       List<Employee> fetchedemp = [];
       jsonData.forEach((key, value) {
         value.forEach((dbid, val) {
@@ -202,10 +214,10 @@ class EmployProvider extends ChangeNotifier {
             height: 300,
             child: AlertDialog(
               title: const Text('Success'),
-              content: SizedBox(
+              content: const SizedBox(
                 height: 200,
                 child: Column(
-                  children: const [
+                  children: [
                     Icon(
                       Icons.check_circle_outline_outlined,
                       color: Colors.greenAccent,

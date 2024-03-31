@@ -55,10 +55,10 @@ class ResignationProvider extends ChangeNotifier {
             height: 300,
             child: AlertDialog(
               title: const Text('Success'),
-              content: SizedBox(
+              content: const SizedBox(
                 height: 200,
                 child: Column(
-                  children: const [
+                  children: [
                     Icon(
                       Icons.check_circle_outline_outlined,
                       color: Colors.greenAccent,
